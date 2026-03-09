@@ -1,0 +1,306 @@
+<div class="dashboard">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <h1>📊 Binance Grid Bot Dashboard</h1>
+      <div class="header-actions">
+        <button class="btn btn-outline" (click)="goToHistory()">📜 Historique</button>
+        <button class="btn btn-secondary" (click)="refreshRates()" [disabled]="loading()">
+          @if (loading()) {
+            <span class="spinner"></span>
+          }
+          🔄 Actualiser les taux
+        </button>
+        @if (isPasswordProtected()) {
+          <button class="btn btn-logout" (click)="logout()" title="Déconnexion">🔒</button>
+        }
+      </div>
+    </div>
+  </header>
+
+  <!-- Exchange Rates Banner -->
+  <section class="rates-banner">
+    <div class="rates-container">
+      <div class="rate-item">
+        <span class="rate-symbol">BTC/EUR</span>
+        <span class="rate-value">{{ formatPrice(btcEur()) }} €</span>
+      </div>
+      <div class="rate-item">
+        <span class="rate-symbol">ETH/EUR</span>
+        <span class="rate-value">{{ formatPrice(ethEur()) }} €</span>
+      </div>
+      <div class="rate-item">
+        <span class="rate-symbol">BNB/EUR</span>
+        <span class="rate-value">{{ formatPrice(bnbEur()) }} €</span>
+      </div>
+      <div class="rate-item">
+        <span class="rate-symbol">USDT/EUR</span>
+        <span class="rate-value">{{ formatPrice(usdtEur()) }} €</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Error Message -->
+    @if (error()) {
+      <div class="alert alert-error">
+        <span>⚠️ {{ error() }}</span>
+      </div>
+    }
+
+    <!-- Success Message -->
+    @if (successMessage()) {
+      <div class="alert alert-success">
+        <span>{{ successMessage() }}</span>
+      </div>
+    }
+
+    <!-- Input Section -->
+    <section class="input-section">
+      <div class="input-card">
+        <h2>📋 Coller les données Binance</h2>
+        <p class="input-info">
+          Copiez le tableau de vos Grid Bots depuis la page Binance et collez-le ci-dessous.
+        </p>
+        <textarea
+          class="bot-data-textarea"
+          [ngModel]="botDataText()"
+          (ngModelChange)="botDataText.set($event)"
+          placeholder="Pair&#10;Time Created&#10;Total Investment&#10;Total Profit&#10;Grid Profit&#10;...&#10;&#10;Collez les données ici..."
+          rows="10"
+        ></textarea>
+        <div class="input-actions">
+          <button class="btn btn-primary" (click)="parseBotData()">📊 Analyser les données</button>
+          <button class="btn btn-outline" (click)="clearData()">🗑️ Effacer</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Closed Bots Config -->
+    <section class="config-section">
+      <div class="config-card">
+        <h2>⚙️ Configuration - Bots Fermés</h2>
+        <p class="config-info">
+          Entrez le total des profits des bots déjà fermés (non inclus dans les données collées).
+        </p>
+        <div class="config-inputs">
+          <div class="form-group">
+            <label for="closedProfitEUR">Grid Profit total (EUR)</label>
+            <input
+              type="number"
+              id="closedProfitEUR"
+              [ngModel]="closedBotsConfig().totalGridProfitEUR"
+              (ngModelChange)="updateClosedProfitEUR($event)"
+              step="0.01"
+              placeholder="0.00"
+            />
+          </div>
+          <div class="form-group">
+            <label for="closedProfitUSDC">Grid Profit total (USDC)</label>
+            <input
+              type="number"
+              id="closedProfitUSDC"
+              [ngModel]="closedBotsConfig().totalGridProfitUSDC"
+              (ngModelChange)="updateClosedProfitUSDC($event)"
+              step="0.01"
+              placeholder="0.00"
+            />
+          </div>
+          <div class="form-group form-actions">
+            <button class="btn btn-primary" (click)="saveAllData()">💾 Sauvegarder</button>
+            @if (hasUnsavedChanges()) {
+              <span class="unsaved-indicator">● Modifications non sauvegardées</span>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Summary Cards -->
+    @if (
+      parsedBots().length > 0 ||
+      closedBotsConfig().totalGridProfitEUR > 0 ||
+      closedBotsConfig().totalGridProfitUSDC > 0
+    ) {
+      <section class="summary-section">
+        <h2>📈 Résumé des Profits</h2>
+        <div class="summary-grid">
+          <div class="summary-card total">
+            <div class="card-icon">💰</div>
+            <div class="card-content">
+              <h3>Total Grid Profit</h3>
+              <div class="profit-values">
+                <span class="profit-eur">{{
+                  formatCurrency(summary().totalGridProfitEUR, 'EUR')
+                }}</span>
+                <span class="profit-usdc"
+                  >{{ formatPrice(summary().totalGridProfitUSDC) }} USDC</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="summary-card open">
+            <div class="card-icon">🟢</div>
+            <div class="card-content">
+              <h3>Bots Ouverts ({{ parsedBots().length }})</h3>
+              <div class="profit-values">
+                <span class="profit-eur">{{ formatCurrency(openBotsGridProfitEUR(), 'EUR') }}</span>
+                <span class="profit-usdc">{{ formatPrice(openBotsGridProfitUSDC()) }} USDC</span>
+              </div>
+            </div>
+          </div>
+          <div class="summary-card closed">
+            <div class="card-icon">🔴</div>
+            <div class="card-content">
+              <h3>Bots Fermés (config)</h3>
+              <div class="profit-values">
+                <span class="profit-eur">{{
+                  formatCurrency(closedBotsConfig().totalGridProfitEUR, 'EUR')
+                }}</span>
+                <span class="profit-usdc"
+                  >{{ formatPrice(closedBotsConfig().totalGridProfitUSDC) }} USDC</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    }
+
+    <!-- Bots Table -->
+    @if (botsWithProfits().length > 0) {
+      <section class="bots-section">
+        <h2>🤖 Grid Bots ({{ parsedBots().length }})</h2>
+        <div class="bots-table-container">
+          <table class="bots-table">
+            <thead>
+              <tr>
+                <th class="sortable" [class.sorted]="isSorted('pair')" (click)="sortBy('pair')">
+                  Paire <span class="sort-icon">{{ getSortIcon('pair') }}</span>
+                </th>
+                <th class="sortable" [class.sorted]="isSorted('status')" (click)="sortBy('status')">
+                  Statut <span class="sort-icon">{{ getSortIcon('status') }}</span>
+                </th>
+                <th
+                  class="sortable"
+                  [class.sorted]="isSorted('gridProfitPercent')"
+                  (click)="sortBy('gridProfitPercent')"
+                >
+                  Grid Profit %
+                  <span class="sort-icon">{{ getSortIcon('gridProfitPercent') }}</span>
+                </th>
+                <th
+                  class="sortable"
+                  [class.sorted]="isSorted('gridProfitPercentDaily')"
+                  (click)="sortBy('gridProfitPercentDaily')"
+                >
+                  %/Jour <span class="sort-icon">{{ getSortIcon('gridProfitPercentDaily') }}</span>
+                </th>
+                <th
+                  class="sortable"
+                  [class.sorted]="isSorted('gridProfitEUR')"
+                  (click)="sortBy('gridProfitEUR')"
+                >
+                  Grid Profit (EUR)
+                  <span class="sort-icon">{{ getSortIcon('gridProfitEUR') }}</span>
+                </th>
+                <th
+                  class="sortable"
+                  [class.sorted]="isSorted('gridProfitUSDC')"
+                  (click)="sortBy('gridProfitUSDC')"
+                >
+                  Grid Profit (USDC)
+                  <span class="sort-icon">{{ getSortIcon('gridProfitUSDC') }}</span>
+                </th>
+                <th
+                  class="sortable"
+                  [class.sorted]="isSorted('totalProfit')"
+                  (click)="sortBy('totalProfit')"
+                >
+                  Total Profit <span class="sort-icon">{{ getSortIcon('totalProfit') }}</span>
+                </th>
+                <th class="sortable" [class.sorted]="isSorted('trades')" (click)="sortBy('trades')">
+                  Trades <span class="sort-icon">{{ getSortIcon('trades') }}</span>
+                </th>
+                <th
+                  class="sortable"
+                  [class.sorted]="isSorted('timeCreated')"
+                  (click)="sortBy('timeCreated')"
+                >
+                  Date de création <span class="sort-icon">{{ getSortIcon('timeCreated') }}</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (botProfit of sortedBotsWithProfits(); track botProfit.bot.pair) {
+                <tr>
+                  <td class="symbol-cell">
+                    <strong>{{ botProfit.bot.pair }}</strong>
+                  </td>
+                  <td>
+                    <span
+                      class="status-badge"
+                      [ngClass]="
+                        botProfit.bot.status === 'Working' ? 'status-running' : 'status-stopped'
+                      "
+                    >
+                      {{ botProfit.bot.status }}
+                    </span>
+                  </td>
+                  <td
+                    class="percent-cell"
+                    [ngClass]="getProfitClass(botProfit.bot.gridProfitPercent)"
+                  >
+                    {{ formatPercent(botProfit.bot.gridProfitPercent) }}
+                  </td>
+                  <td
+                    class="percent-cell daily-percent"
+                    [ngClass]="getProfitClass(calculateDailyPercent(botProfit.bot))"
+                  >
+                    {{ formatDailyPercent(botProfit.bot) }}
+                  </td>
+                  <td class="profit-cell" [ngClass]="getProfitClass(botProfit.gridProfitInEUR)">
+                    {{ formatCurrency(botProfit.gridProfitInEUR, 'EUR') }}
+                  </td>
+                  <td class="profit-cell" [ngClass]="getProfitClass(botProfit.gridProfitInUSDC)">
+                    {{ formatPrice(botProfit.gridProfitInUSDC) }} USDC
+                  </td>
+                  <td [ngClass]="getProfitClass(botProfit.bot.totalProfit)">
+                    {{ formatPriceSmall(botProfit.bot.totalProfit) }} {{ botProfit.bot.quoteAsset }}
+                    <br />
+                    <small>{{ formatPercent(botProfit.bot.totalProfitPercent) }}</small>
+                  </td>
+                  <td>{{ botProfit.bot.matchedTrades }}</td>
+                  <td>{{ formatDate(botProfit.bot.timeCreated) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+
+    <!-- Loading State -->
+    @if (loading()) {
+      <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>Chargement des taux de change...</p>
+      </div>
+    }
+
+    <!-- No Data -->
+    @if (!loading() && parsedBots().length === 0) {
+      <div class="no-data">
+        <div class="no-data-icon">📭</div>
+        <h3>Aucun Grid Bot</h3>
+        <p>Collez les données de vos Grid Bots depuis Binance pour voir vos profits.</p>
+      </div>
+    }
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Taux de change actualisés automatiquement toutes les 30 secondes</p>
+  </footer>
+</div>

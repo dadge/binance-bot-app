@@ -1,0 +1,13 @@
+node_modules
+dist
+.git
+.gitignore
+.angular
+*.md
+*.log
+.vscode
+.idea
+coverage
+e2e
+hassio-addon
+*.tgz

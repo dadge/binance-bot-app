@@ -1,0 +1,21 @@
+services:
+  binance-bot:
+    build: .
+    container_name: binance-bot-app
+    restart: unless-stopped
+    ports:
+      - '4201:4201'
+    volumes:
+      # Volume for data persistence (if you add server-side storage later)
+      - binance-bot-data:/data
+    environment:
+      - TZ=Europe/Paris
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:4201/']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  binance-bot-data:

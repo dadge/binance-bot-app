@@ -1,0 +1,752 @@
+// Variables
+$primary-color: #f0b90b;
+$primary-dark: #d4a50a;
+$secondary-color: #1e2329;
+$background-dark: #0b0e11;
+$background-card: #181a20;
+$text-primary: #eaecef;
+$text-secondary: #848e9c;
+$success-color: #0ecb81;
+$danger-color: #f6465d;
+$border-color: #2b3139;
+
+// Mixins
+@mixin card {
+  background: $background-card;
+  border-radius: 12px;
+  border: 1px solid $border-color;
+  padding: 24px;
+}
+
+@mixin gradient-text {
+  background: linear-gradient(90deg, $primary-color 0%, #fcd535 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// Base Styles
+.dashboard {
+  min-height: 100vh;
+  background: $background-dark;
+  color: $text-primary;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}
+
+// Header
+.header {
+  background: $background-card;
+  border-bottom: 1px solid $border-color;
+  padding: 16px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  .header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    @include gradient-text;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 12px;
+  }
+}
+
+// Rates Banner
+.rates-banner {
+  background: linear-gradient(135deg, $secondary-color 0%, darken($secondary-color, 5%) 100%);
+  padding: 16px 24px;
+  border-bottom: 1px solid $border-color;
+
+  .rates-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .rate-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+
+    .rate-symbol {
+      font-size: 0.85rem;
+      color: $text-secondary;
+      font-weight: 500;
+    }
+
+    .rate-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: $primary-color;
+    }
+  }
+}
+
+// Main Content
+.main-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+// Buttons
+.btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &.btn-primary {
+    background: $primary-color;
+    color: $secondary-color;
+
+    &:hover:not(:disabled) {
+      background: $primary-dark;
+    }
+  }
+
+  &.btn-secondary {
+    background: rgba($primary-color, 0.1);
+    color: $primary-color;
+    border: 1px solid $primary-color;
+
+    &:hover:not(:disabled) {
+      background: rgba($primary-color, 0.2);
+    }
+  }
+
+  &.btn-outline {
+    background: transparent;
+    color: $text-secondary;
+    border: 1px solid $border-color;
+
+    &:hover:not(:disabled) {
+      border-color: $text-secondary;
+      color: $text-primary;
+    }
+  }
+
+  &.btn-logout {
+    background: transparent;
+    color: $text-secondary;
+    border: 1px solid $border-color;
+    padding: 8px 12px;
+    font-size: 1rem;
+
+    &:hover:not(:disabled) {
+      background: rgba($danger-color, 0.1);
+      border-color: $danger-color;
+      color: $danger-color;
+    }
+  }
+
+  &.btn-full {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+// Login Section
+.login-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.login-card {
+  @include card;
+  max-width: 450px;
+  width: 100%;
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .login-description {
+    color: $text-secondary;
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 0.9rem;
+  }
+}
+
+.form-group {
+  margin-bottom: 16px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: $text-secondary;
+    font-size: 0.9rem;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid $border-color;
+    background: $background-dark;
+    color: $text-primary;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+    }
+
+    &::placeholder {
+      color: $text-secondary;
+    }
+  }
+
+  select {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid $border-color;
+    background: $background-dark;
+    color: $text-primary;
+    font-size: 1rem;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+    }
+
+    option {
+      background: $background-card;
+      color: $text-primary;
+    }
+  }
+}
+
+.error-message {
+  background: rgba($danger-color, 0.1);
+  border: 1px solid $danger-color;
+  color: $danger-color;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+// Alert
+.alert {
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  animation: slideIn 0.3s ease;
+
+  &.alert-error {
+    background: rgba($danger-color, 0.1);
+    border: 1px solid $danger-color;
+    color: $danger-color;
+  }
+
+  &.alert-success {
+    background: rgba($success-color, 0.1);
+    border: 1px solid $success-color;
+    color: $success-color;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Summary Section
+.summary-section {
+  margin-bottom: 32px;
+
+  h2 {
+    font-size: 1.25rem;
+    margin-bottom: 16px;
+  }
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.summary-card {
+  @include card;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  &.total {
+    border-left: 4px solid $primary-color;
+  }
+
+  &.open {
+    border-left: 4px solid $success-color;
+  }
+
+  &.closed {
+    border-left: 4px solid $danger-color;
+  }
+
+  .card-icon {
+    font-size: 2rem;
+  }
+
+  .card-content {
+    flex: 1;
+
+    h3 {
+      font-size: 0.9rem;
+      color: $text-secondary;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+  }
+
+  .profit-values {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .profit-eur {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $success-color;
+    }
+
+    .profit-usdc {
+      font-size: 1rem;
+      color: $text-secondary;
+    }
+  }
+}
+
+// Bots Section
+.bots-section {
+  margin-bottom: 32px;
+
+  h2 {
+    font-size: 1.25rem;
+    margin-bottom: 16px;
+  }
+}
+
+.bots-table-container {
+  @include card;
+  padding: 0;
+  overflow-x: auto;
+}
+
+.bots-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid $border-color;
+  }
+
+  th {
+    background: rgba($background-dark, 0.5);
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: $text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    // Styles pour les colonnes triables
+    &.sortable {
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+
+      &:hover {
+        background: rgba($primary-color, 0.15);
+        color: $primary-color;
+      }
+
+      .sort-icon {
+        margin-left: 6px;
+        font-size: 0.75rem;
+        opacity: 0.5;
+        transition: opacity 0.2s ease;
+      }
+
+      &.sorted {
+        color: $primary-color;
+        background: rgba($primary-color, 0.1);
+
+        .sort-icon {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  tbody tr {
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: rgba($primary-color, 0.05);
+    }
+
+    &:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  .symbol-cell {
+    font-weight: 600;
+  }
+
+  .percent-cell {
+    font-weight: 600;
+    text-align: right;
+
+    &.positive {
+      color: $success-color;
+    }
+
+    &.negative {
+      color: $danger-color;
+    }
+
+    &.daily-percent {
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+  }
+
+  .profit-cell {
+    font-weight: 600;
+
+    &.positive {
+      color: $success-color;
+    }
+
+    &.negative {
+      color: $danger-color;
+    }
+  }
+}
+
+// Add Bot Section
+.add-bot-section {
+  margin-bottom: 24px;
+}
+
+.add-bot-form-section {
+  margin-bottom: 24px;
+}
+
+.add-bot-card {
+  @include card;
+  max-width: 600px;
+
+  h2 {
+    font-size: 1.25rem;
+    margin-bottom: 20px;
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+// Delete Button
+.btn-delete {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: rgba($danger-color, 0.2);
+  }
+}
+
+// Status Badge
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  &.status-running {
+    background: rgba($success-color, 0.15);
+    color: $success-color;
+  }
+
+  &.status-stopped {
+    background: rgba($danger-color, 0.15);
+    color: $danger-color;
+  }
+
+  &.status-expired {
+    background: rgba($text-secondary, 0.15);
+    color: $text-secondary;
+  }
+}
+
+// Loading
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+
+  p {
+    margin-top: 16px;
+    color: $text-secondary;
+  }
+}
+
+.loading-spinner,
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid $border-color;
+  border-top-color: $primary-color;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// No Data
+.no-data {
+  @include card;
+  text-align: center;
+  padding: 60px 24px;
+
+  .no-data-icon {
+    font-size: 4rem;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: $text-secondary;
+  }
+}
+
+// Footer
+.footer {
+  text-align: center;
+  padding: 24px;
+  color: $text-secondary;
+  font-size: 0.85rem;
+  border-top: 1px solid $border-color;
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .header {
+    .header-content {
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+    }
+  }
+
+  .rates-banner {
+    .rates-container {
+      justify-content: center;
+    }
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bots-table {
+    th,
+    td {
+      padding: 12px 8px;
+      font-size: 0.85rem;
+    }
+  }
+}
+
+// Input Section
+.input-section {
+  margin-bottom: 24px;
+}
+
+.input-card {
+  @include card;
+
+  h2 {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+  }
+
+  .input-info {
+    color: $text-secondary;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+  }
+}
+
+.bot-data-textarea {
+  width: 100%;
+  min-height: 200px;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid $border-color;
+  background: $background-dark;
+  color: $text-primary;
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  resize: vertical;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+  }
+
+  &::placeholder {
+    color: $text-secondary;
+  }
+}
+
+.input-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+// Config Section
+.config-section {
+  margin-bottom: 24px;
+}
+
+.config-card {
+  @include card;
+
+  h2 {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+  }
+
+  .config-info {
+    color: $text-secondary;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+  }
+}
+
+.config-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  align-items: end;
+
+  .form-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 8px;
+  }
+
+  .unsaved-indicator {
+    color: $primary-color;
+    font-size: 0.85rem;
+    font-weight: 500;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

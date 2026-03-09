@@ -1,0 +1,124 @@
+<div class="history-page">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <h1>📜 Historique des Sauvegardes</h1>
+      <div class="header-actions">
+        <button class="btn btn-secondary" (click)="goToDashboard()">← Retour au Dashboard</button>
+        @if (history().length > 0) {
+          <button class="btn btn-danger" (click)="clearAllHistory()">🗑️ Tout supprimer</button>
+        }
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- Stats Summary -->
+    @if (history().length > 0) {
+      <section class="stats-section">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-content">
+              <span class="stat-value">{{ totalEntries() }}</span>
+              <span class="stat-label">Sauvegardes</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">💶</div>
+            <div class="stat-content">
+              <span class="stat-value">{{ formatCurrency(totalProfitEUR(), 'EUR') }}</span>
+              <span class="stat-label">Dernier profit total (EUR)</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">💵</div>
+            <div class="stat-content">
+              <span class="stat-value">{{ formatCurrency(totalProfitUSDC(), 'USD') }}</span>
+              <span class="stat-label">Dernier profit total (USDC)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    }
+
+    <!-- History List -->
+    <section class="history-section">
+      @if (history().length === 0) {
+        <div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <h2>Aucune sauvegarde</h2>
+          <p>Vous n'avez pas encore effectué de sauvegarde.</p>
+          <button class="btn btn-primary" (click)="goToDashboard()">Aller au Dashboard</button>
+        </div>
+      } @else {
+        <div class="history-list">
+          @for (entry of history(); track entry.id) {
+            <div class="history-card" [class.deleting]="deleteConfirmId() === entry.id">
+              <div class="card-header">
+                <div class="card-date">
+                  <span class="date-icon">📅</span>
+                  <span>{{ formatDate(entry.savedAt) }}</span>
+                </div>
+                <div class="card-badges">
+                  <span class="badge badge-bots">{{ entry.parsedBotsCount }} bot(s)</span>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <div class="profit-row">
+                  <div class="profit-item">
+                    <span class="profit-label">Grid Profit Total</span>
+                    <span class="profit-value eur">{{
+                      formatCurrency(entry.totalGridProfitEUR, 'EUR')
+                    }}</span>
+                  </div>
+                  <div class="profit-item">
+                    <span class="profit-label">En USDC</span>
+                    <span class="profit-value usdc">{{
+                      formatCurrency(entry.totalGridProfitUSDC, 'USD')
+                    }}</span>
+                  </div>
+                </div>                <div class="config-row">
+                  <span class="config-label">Bots fermés configurés:</span>
+                  <span class="config-value">
+                    {{ formatCurrency(entry.closedBotsConfig?.totalGridProfitEUR ?? 0, 'EUR') }} /
+                    {{ formatCurrency(entry.closedBotsConfig?.totalGridProfitUSDC ?? 0, 'USD') }}
+                  </span>
+                </div>
+
+                @if (entry.botDataText) {
+                  <div class="data-preview">
+                    <span class="preview-label">Aperçu des données:</span>
+                    <pre class="preview-text">{{ getPreviewText(entry.botDataText) }}</pre>
+                  </div>
+                }
+              </div>
+
+              <div class="card-actions">
+                @if (deleteConfirmId() === entry.id) {
+                  <div class="confirm-delete">
+                    <span>Confirmer la suppression ?</span>
+                    <button class="btn btn-danger btn-sm" (click)="deleteEntry(entry.id)">
+                      Oui, supprimer
+                    </button>
+                    <button class="btn btn-secondary btn-sm" (click)="cancelDelete()">
+                      Annuler
+                    </button>
+                  </div>
+                } @else {
+                  <button class="btn btn-primary btn-sm" (click)="restoreEntry(entry)">
+                    🔄 Restaurer
+                  </button>
+                  <button class="btn btn-outline btn-sm" (click)="confirmDelete(entry.id)">
+                    🗑️ Supprimer
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+  </main>
+</div>

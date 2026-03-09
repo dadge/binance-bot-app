@@ -1,0 +1,378 @@
+// Variables (same as dashboard)
+$primary-color: #f0b90b;
+$primary-dark: #d4a50a;
+$secondary-color: #1e2329;
+$background-dark: #0b0e11;
+$background-card: #181a20;
+$text-primary: #eaecef;
+$text-secondary: #848e9c;
+$success-color: #0ecb81;
+$danger-color: #f6465d;
+$border-color: #2b3139;
+
+@mixin card {
+  background: $background-card;
+  border-radius: 12px;
+  border: 1px solid $border-color;
+  padding: 24px;
+}
+
+@mixin gradient-text {
+  background: linear-gradient(90deg, $primary-color 0%, #fcd535 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.history-page {
+  min-height: 100vh;
+  background: $background-dark;
+  color: $text-primary;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}
+
+// Header
+.header {
+  background: $background-card;
+  border-bottom: 1px solid $border-color;
+  padding: 16px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  .header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    @include gradient-text;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 12px;
+  }
+}
+
+.main-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+// Stats Section
+.stats-section {
+  margin-bottom: 32px;
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .stat-card {
+    @include card;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .stat-icon {
+      font-size: 2rem;
+    }
+
+    .stat-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: $primary-color;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: $text-secondary;
+    }
+  }
+}
+
+// Empty State
+.empty-state {
+  @include card;
+  text-align: center;
+  padding: 60px 24px;
+
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: 16px;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: $text-secondary;
+    margin-bottom: 24px;
+  }
+}
+
+// History List
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.history-card {
+  @include card;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: $primary-color;
+  }
+
+  &.deleting {
+    border-color: $danger-color;
+    background: rgba($danger-color, 0.1);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid $border-color;
+
+    .card-date {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+
+      .date-icon {
+        font-size: 1.1rem;
+      }
+    }
+
+    .card-badges {
+      display: flex;
+      gap: 8px;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+
+      &.badge-bots {
+        background: rgba($primary-color, 0.2);
+        color: $primary-color;
+      }
+    }
+  }
+
+  .card-body {
+    .profit-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+
+      .profit-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .profit-label {
+          font-size: 0.85rem;
+          color: $text-secondary;
+        }
+
+        .profit-value {
+          font-size: 1.25rem;
+          font-weight: 700;
+
+          &.eur {
+            color: $success-color;
+          }
+
+          &.usdc {
+            color: $primary-color;
+          }
+        }
+      }
+    }
+
+    .config-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 0.9rem;
+      color: $text-secondary;
+      margin-bottom: 12px;
+
+      .config-value {
+        color: $text-primary;
+      }
+    }
+
+    .data-preview {
+      margin-top: 12px;
+
+      .preview-label {
+        display: block;
+        font-size: 0.85rem;
+        color: $text-secondary;
+        margin-bottom: 8px;
+      }
+
+      .preview-text {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        color: $text-secondary;
+        overflow: hidden;
+        max-height: 80px;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+    }
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid $border-color;
+
+    .confirm-delete {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+
+      span {
+        color: $danger-color;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// Buttons
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.btn-primary {
+    background: $primary-color;
+    color: $secondary-color;
+
+    &:hover:not(:disabled) {
+      background: $primary-dark;
+    }
+  }
+
+  &.btn-secondary {
+    background: $secondary-color;
+    color: $text-primary;
+    border: 1px solid $border-color;
+
+    &:hover:not(:disabled) {
+      background: lighten($secondary-color, 5%);
+    }
+  }
+
+  &.btn-outline {
+    background: transparent;
+    color: $text-primary;
+    border: 1px solid $border-color;
+
+    &:hover:not(:disabled) {
+      border-color: $primary-color;
+      color: $primary-color;
+    }
+  }
+
+  &.btn-danger {
+    background: $danger-color;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background: darken($danger-color, 10%);
+    }
+  }
+
+  &.btn-sm {
+    padding: 6px 14px;
+    font-size: 0.85rem;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .header {
+    .header-content {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .header-actions {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
+
+  .history-card {
+    .card-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .card-actions {
+      flex-direction: column;
+
+      .confirm-delete {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  }
+}
