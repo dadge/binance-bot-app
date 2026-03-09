@@ -55,7 +55,7 @@ Thumbs.db
 *.sqlite-wal
 **/data/*.sqlite*
 backend/data/
-deploy-hassio/backend/data/
+hassio-addon/backend/data/
 
 # Environment files
 .env

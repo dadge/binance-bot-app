@@ -27,14 +27,18 @@
           <div class="stat-card">
             <div class="stat-icon">💶</div>
             <div class="stat-content">
-              <span class="stat-value profit-eur">{{ formatCurrency(totalProfitEUR(), 'EUR') }}</span>
+              <span class="stat-value profit-eur">{{
+                formatCurrency(totalProfitEUR(), 'EUR')
+              }}</span>
               <span class="stat-label">Dernier profit total (EUR)</span>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon">💵</div>
             <div class="stat-content">
-              <span class="stat-value profit-usdc">{{ formatCurrency(totalProfitUSDC(), 'USD') }}</span>
+              <span class="stat-value profit-usdc">{{
+                formatCurrency(totalProfitUSDC(), 'USD')
+              }}</span>
               <span class="stat-label">Dernier profit total (USDC)</span>
             </div>
           </div>
@@ -48,52 +52,59 @@
             <h2>📈 Évolution du Grid Profit</h2>
             <div class="chart-controls">
               <div class="control-group">
-                <button 
+                <button
                   class="control-btn"
                   [class.active]="chartCurrency() === 'EUR'"
                   (click)="setChartCurrency('EUR')"
-                  aria-label="Afficher en EUR">
+                  aria-label="Afficher en EUR"
+                >
                   EUR
                 </button>
-                <button 
+                <button
                   class="control-btn"
                   [class.active]="chartCurrency() === 'USDC'"
                   (click)="setChartCurrency('USDC')"
-                  aria-label="Afficher en USDC">
+                  aria-label="Afficher en USDC"
+                >
                   USDC
                 </button>
               </div>
               <div class="control-group">
-                <button 
+                <button
                   class="control-btn"
                   [class.active]="chartPeriod() === '7d'"
                   (click)="setChartPeriod('7d')"
-                  aria-label="Afficher les 7 derniers jours">
+                  aria-label="Afficher les 7 derniers jours"
+                >
                   7j
                 </button>
-                <button 
+                <button
                   class="control-btn"
                   [class.active]="chartPeriod() === '1m'"
                   (click)="setChartPeriod('1m')"
-                  aria-label="Afficher le dernier mois">
+                  aria-label="Afficher le dernier mois"
+                >
                   1m
                 </button>
-                <button 
+                <button
                   class="control-btn"
                   [class.active]="chartPeriod() === '3m'"
                   (click)="setChartPeriod('3m')"
-                  aria-label="Afficher les 3 derniers mois">
+                  aria-label="Afficher les 3 derniers mois"
+                >
                   3m
                 </button>
               </div>
             </div>
           </div>
-          
+
           <div class="chart-container">
             @if (chartData().length >= 2) {
               <div class="chart-y-axis">
                 <span class="y-label">{{ formatCurrency(chartMaxValue(), chartCurrency()) }}</span>
-                <span class="y-label">{{ formatCurrency((chartMaxValue() + chartMinValue()) / 2, chartCurrency()) }}</span>
+                <span class="y-label">{{
+                  formatCurrency((chartMaxValue() + chartMinValue()) / 2, chartCurrency())
+                }}</span>
                 <span class="y-label">{{ formatCurrency(chartMinValue(), chartCurrency()) }}</span>
               </div>
               <div class="chart-area">
@@ -101,24 +112,32 @@
                   <!-- Gradient definition -->
                   <defs>
                     <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" [attr.stop-color]="chartCurrency() === 'EUR' ? '#0ecb81' : '#f0b90b'" stop-opacity="0.3"/>
-                      <stop offset="100%" [attr.stop-color]="chartCurrency() === 'EUR' ? '#0ecb81' : '#f0b90b'" stop-opacity="0"/>
+                      <stop
+                        offset="0%"
+                        [attr.stop-color]="chartCurrency() === 'EUR' ? '#0ecb81' : '#f0b90b'"
+                        stop-opacity="0.3"
+                      />
+                      <stop
+                        offset="100%"
+                        [attr.stop-color]="chartCurrency() === 'EUR' ? '#0ecb81' : '#f0b90b'"
+                        stop-opacity="0"
+                      />
                     </linearGradient>
                   </defs>
                   <!-- Area fill -->
                   <path [attr.d]="getChartAreaPath()" fill="url(#chartGradient)" />
                   <!-- Line -->
-                  <path 
-                    [attr.d]="getChartPath()" 
-                    fill="none" 
-                    [attr.stroke]="chartCurrency() === 'EUR' ? '#0ecb81' : '#f0b90b'" 
+                  <path
+                    [attr.d]="getChartPath()"
+                    fill="none"
+                    [attr.stroke]="chartCurrency() === 'EUR' ? '#0ecb81' : '#f0b90b'"
                     stroke-width="0.5"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   />
                   <!-- Data points -->
                   @for (point of chartData(); track point.date; let i = $index) {
-                    <circle 
+                    <circle
                       [attr.cx]="(i / (chartData().length - 1)) * 100"
                       [attr.cy]="100 - getChartY(point.value)"
                       r="1"
@@ -128,9 +147,17 @@
                 </svg>
               </div>
               <div class="chart-x-axis">
-                @for (point of chartData(); track point.date; let i = $index; let first = $first; let last = $last) {
+                @for (
+                  point of chartData();
+                  track point.date;
+                  let i = $index;
+                  let first = $first;
+                  let last = $last
+                ) {
                   @if (first || last || i % Math.ceil(chartData().length / 5) === 0) {
-                    <span class="x-label" [style.left.%]="(i / (chartData().length - 1)) * 100">{{ point.label }}</span>
+                    <span class="x-label" [style.left.%]="(i / (chartData().length - 1)) * 100">{{
+                      point.label
+                    }}</span>
                   }
                 }
               </div>
@@ -157,7 +184,11 @@
       } @else {
         <div class="history-list">
           @for (entry of history(); track entry.id) {
-            <div class="history-card" [class.expanded]="isExpanded(entry.id)" [class.deleting]="deleteConfirmId() === entry.id">
+            <div
+              class="history-card"
+              [class.expanded]="isExpanded(entry.id)"
+              [class.deleting]="deleteConfirmId() === entry.id"
+            >
               <!-- Compact View (always visible) -->
               <div class="card-compact" (click)="toggleExpand(entry.id)">
                 <div class="compact-date">
@@ -165,18 +196,23 @@
                   <span>{{ formatDate(entry.savedAt) }}</span>
                 </div>
                 <div class="compact-profits">
-                  <span class="profit-eur">{{ formatCurrency(entry.totalGridProfitEUR, 'EUR') }}</span>
+                  <span class="profit-eur">{{
+                    formatCurrency(entry.totalGridProfitEUR, 'EUR')
+                  }}</span>
                   <span class="profit-separator">|</span>
-                  <span class="profit-usdc">{{ formatCurrency(entry.totalGridProfitUSDC, 'USD') }}</span>
+                  <span class="profit-usdc">{{
+                    formatCurrency(entry.totalGridProfitUSDC, 'USD')
+                  }}</span>
                 </div>
                 <div class="compact-bots">
                   <span class="badge badge-bots">{{ entry.parsedBotsCount }} bot(s)</span>
                 </div>
-                <button 
-                  class="expand-btn" 
+                <button
+                  class="expand-btn"
                   [attr.aria-expanded]="isExpanded(entry.id)"
                   aria-label="Développer les détails"
-                  (click)="$event.stopPropagation(); toggleExpand(entry.id)">
+                  (click)="$event.stopPropagation(); toggleExpand(entry.id)"
+                >
                   <span class="expand-icon" [class.rotated]="isExpanded(entry.id)">▼</span>
                 </button>
               </div>
@@ -188,19 +224,28 @@
                     <div class="profit-row">
                       <div class="profit-item">
                         <span class="profit-label">Grid Profit Total</span>
-                        <span class="profit-value eur">{{ formatCurrency(entry.totalGridProfitEUR, 'EUR') }}</span>
+                        <span class="profit-value eur">{{
+                          formatCurrency(entry.totalGridProfitEUR, 'EUR')
+                        }}</span>
                       </div>
                       <div class="profit-item">
                         <span class="profit-label">En USDC</span>
-                        <span class="profit-value usdc">{{ formatCurrency(entry.totalGridProfitUSDC, 'USD') }}</span>
+                        <span class="profit-value usdc">{{
+                          formatCurrency(entry.totalGridProfitUSDC, 'USD')
+                        }}</span>
                       </div>
                     </div>
-                    
+
                     <div class="config-row">
                       <span class="config-label">Bots fermés configurés:</span>
                       <span class="config-value">
-                        {{ formatCurrency(entry.closedBotsConfig?.totalGridProfitEUR ?? 0, 'EUR') }} /
-                        {{ formatCurrency(entry.closedBotsConfig?.totalGridProfitUSDC ?? 0, 'USD') }}
+                        {{
+                          formatCurrency(entry.closedBotsConfig?.totalGridProfitEUR ?? 0, 'EUR')
+                        }}
+                        /
+                        {{
+                          formatCurrency(entry.closedBotsConfig?.totalGridProfitUSDC ?? 0, 'USD')
+                        }}
                       </span>
                     </div>
 

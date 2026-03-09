@@ -62,7 +62,7 @@ export class HistoryComponent {
     const entries = this.history();
     const currency = this.chartCurrency();
     const period = this.chartPeriod();
-    
+
     if (entries.length === 0) return [];
 
     // Calculate the cutoff date based on period
@@ -82,11 +82,11 @@ export class HistoryComponent {
 
     // Filter and map entries
     const filteredEntries = entries
-      .filter(e => new Date(e.savedAt) >= cutoffDate)
-      .map(e => ({
+      .filter((e) => new Date(e.savedAt) >= cutoffDate)
+      .map((e) => ({
         date: new Date(e.savedAt),
         value: currency === 'EUR' ? e.totalGridProfitEUR : e.totalGridProfitUSDC,
-        label: this.formatShortDate(new Date(e.savedAt))
+        label: this.formatShortDate(new Date(e.savedAt)),
       }))
       .reverse(); // Oldest first for chart
 
@@ -97,13 +97,13 @@ export class HistoryComponent {
   chartMinValue = computed(() => {
     const data = this.chartData();
     if (data.length === 0) return 0;
-    return Math.min(...data.map(d => d.value)) * 0.95;
+    return Math.min(...data.map((d) => d.value)) * 0.95;
   });
 
   chartMaxValue = computed(() => {
     const data = this.chartData();
     if (data.length === 0) return 100;
-    return Math.max(...data.map(d => d.value)) * 1.05;
+    return Math.max(...data.map((d) => d.value)) * 1.05;
   });
 
   isExpanded(id: string): boolean {
