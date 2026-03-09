@@ -7,7 +7,8 @@ import { firstValueFrom } from 'rxjs';
   providedIn: 'root',
 })
 export class StorageService {
-  private readonly API_BASE = '/api';
+  // Backend API base - uses relative path for Home Assistant ingress compatibility
+  private readonly API_BASE = 'api';
 
   // Fallback keys for localStorage (used if backend is unavailable)
   private readonly HISTORY_KEY = 'bot_data_history';

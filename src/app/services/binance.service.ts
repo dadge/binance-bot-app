@@ -14,9 +14,8 @@ import { IExchangeRateService } from './exchange-rate.interface';
 })
 export class BinanceService implements IExchangeRateService {
   private http = inject(HttpClient);
-
-  // Backend API endpoint - proxied via nginx in production
-  private readonly apiUrl = '/api/rates';
+  // Backend API endpoint - uses relative path for Home Assistant ingress compatibility
+  private readonly apiUrl = 'api/rates';
 
   getExchangeRates(): Observable<Map<string, ExchangeRate>> {
     return this.http.get<ExchangeRate[]>(this.apiUrl).pipe(
