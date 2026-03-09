@@ -4,7 +4,7 @@
   "slug": "binance-bot-dashboard",
   "description": "Dashboard pour suivre les profits des Grid Bots Binance en EUR et USDC",
   "arch": ["amd64", "aarch64", "armv7"],
-  "url": "https://github.com/your-repo/binance-bot-dashboard",
+  "url": "https://github.com/dadge/binance-bot-app",
   "startup": "application",
   "boot": "auto",
   "ports": {
