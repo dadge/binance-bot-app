@@ -160,7 +160,7 @@ export class StorageService {
    */
   async restoreEntry(entry: SavedDataEntry): Promise<void> {
     const config = entry.closedBotsConfig ?? { totalGridProfitEUR: 0, totalGridProfitUSDC: 0 };
-    
+
     if (this.backendAvailable) {
       try {
         await this.saveCurrentConfigToBackend(config, entry.botDataText);

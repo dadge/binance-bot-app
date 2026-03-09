@@ -76,7 +76,7 @@ $border-color: #2b3139;
 
 // Stats Section
 .stats-section {
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 
   .stats-grid {
     display: grid;
@@ -103,11 +103,142 @@ $border-color: #2b3139;
       font-size: 1.25rem;
       font-weight: 700;
       color: $primary-color;
+
+      &.profit-eur {
+        color: $success-color;
+      }
+
+      &.profit-usdc {
+        color: $primary-color;
+      }
     }
 
     .stat-label {
       font-size: 0.85rem;
       color: $text-secondary;
+    }
+  }
+}
+
+// Chart Section
+.chart-section {
+  margin-bottom: 24px;
+
+  .chart-card {
+    @include card;
+  }
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 20px;
+
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: $text-primary;
+    }
+
+    .chart-controls {
+      display: flex;
+      gap: 12px;
+    }
+
+    .control-group {
+      display: flex;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      padding: 4px;
+    }
+
+    .control-btn {
+      padding: 6px 14px;
+      border: none;
+      background: transparent;
+      color: $text-secondary;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        color: $text-primary;
+      }
+
+      &.active {
+        background: $primary-color;
+        color: $secondary-color;
+      }
+    }
+  }
+
+  .chart-container {
+    display: flex;
+    gap: 12px;
+    height: 250px;
+    position: relative;
+  }
+
+  .chart-y-axis {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0 8px;
+    min-width: 90px;
+
+    .y-label {
+      font-size: 0.75rem;
+      color: $text-secondary;
+      text-align: right;
+    }
+  }
+
+  .chart-area {
+    flex: 1;
+    position: relative;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+
+    .chart-svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .chart-x-axis {
+    position: absolute;
+    bottom: -24px;
+    left: 102px;
+    right: 0;
+    height: 20px;
+
+    .x-label {
+      position: absolute;
+      font-size: 0.7rem;
+      color: $text-secondary;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+  }
+
+  .chart-empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: $text-secondary;
+    font-size: 0.9rem;
+    gap: 8px;
+
+    .chart-empty-hint {
+      font-size: 0.8rem;
+      opacity: 0.7;
     }
   }
 }
@@ -138,14 +269,20 @@ $border-color: #2b3139;
 .history-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
 }
 
 .history-card {
   @include card;
+  padding: 0;
+  overflow: hidden;
   transition: all 0.2s ease;
 
   &:hover {
+    border-color: rgba($primary-color, 0.5);
+  }
+
+  &.expanded {
     border-color: $primary-color;
   }
 
@@ -154,40 +291,107 @@ $border-color: #2b3139;
     background: rgba($danger-color, 0.1);
   }
 
-  .card-header {
+  // Compact view
+  .card-compact {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid $border-color;
+    gap: 16px;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: background 0.2s ease;
 
-    .card-date {
+    &:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .compact-date {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-weight: 600;
+      font-weight: 500;
+      min-width: 180px;
 
       .date-icon {
-        font-size: 1.1rem;
+        font-size: 1rem;
       }
     }
 
-    .card-badges {
+    .compact-profits {
       display: flex;
-      gap: 8px;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+
+      .profit-eur {
+        font-weight: 700;
+        color: $success-color;
+      }
+
+      .profit-separator {
+        color: $border-color;
+      }
+
+      .profit-usdc {
+        font-weight: 700;
+        color: $primary-color;
+      }
     }
 
-    .badge {
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 600;
-
-      &.badge-bots {
+    .compact-bots {
+      .badge-bots {
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
         background: rgba($primary-color, 0.2);
         color: $primary-color;
       }
+    }
+
+    .expand-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .expand-icon {
+        color: $text-secondary;
+        font-size: 0.7rem;
+        transition: transform 0.2s ease;
+
+        &.rotated {
+          transform: rotate(180deg);
+        }
+      }
+    }
+  }
+
+  // Expanded view
+  .card-expanded {
+    border-top: 1px solid $border-color;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    animation: slideDown 0.2s ease;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 
@@ -359,11 +563,47 @@ $border-color: #2b3139;
     }
   }
 
-  .history-card {
-    .card-header {
+  .chart-section {
+    .chart-header {
       flex-direction: column;
       align-items: flex-start;
-      gap: 8px;
+    }
+
+    .chart-container {
+      height: 200px;
+    }
+
+    .chart-y-axis {
+      min-width: 70px;
+
+      .y-label {
+        font-size: 0.65rem;
+      }
+    }
+
+    .chart-x-axis {
+      left: 82px;
+    }
+  }
+
+  .history-card {
+    .card-compact {
+      flex-wrap: wrap;
+      gap: 12px;
+
+      .compact-date {
+        min-width: auto;
+        flex: 1;
+      }
+
+      .compact-profits {
+        order: 3;
+        flex-basis: 100%;
+      }
+
+      .expand-btn {
+        order: 2;
+      }
     }
 
     .card-actions {

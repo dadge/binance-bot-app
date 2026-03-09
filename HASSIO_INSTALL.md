@@ -25,14 +25,16 @@ L'add-on se compose de :
 Sur votre PC Windows, ouvrez PowerShell et exécutez :
 
 ```powershell
-cd d:\dev\perso\binance-bot\binance-bot-app
-.\build-hassio.ps1
+cd d:\dev\perso\binance-bot-app
+
+# Build Angular
+npm run build
+
+# Copier les fichiers compilés vers hassio-addon
+Remove-Item -Recurse -Force hassio-addon\www
+Copy-Item -Recurse dist\binance-bot-app\browser hassio-addon\www
+Copy-Item src\assets\config.js hassio-addon\www\assets\config.js
 ```
-
-Ce script va :
-
-1. Builder l'application Angular
-2. Préparer le dossier `deploy-hassio/` avec tous les fichiers nécessaires
 
 ### Étape 2 : Copier vers Home Assistant
 
@@ -42,7 +44,7 @@ Ce script va :
 2. Configurez un utilisateur/mot de passe et démarrez-le
 3. Depuis Windows, ouvrez l'Explorateur de fichiers et allez à : `\\homeassistant.local\addons\`
 4. Créez un nouveau dossier `binance-bot-dashboard`
-5. Copiez **tout le contenu** de `deploy-hassio\` dans ce dossier
+5. Copiez **tout le contenu** de `hassio-addon\` dans ce dossier
 
 Structure finale sur HA :
 
@@ -50,6 +52,7 @@ Structure finale sur HA :
 /addons/binance-bot-dashboard/
 ├── backend/
 │   ├── package.json
+│   ├── database.js
 │   └── server.js
 ├── www/
 │   ├── index.html
@@ -65,7 +68,7 @@ Structure finale sur HA :
 
 ```powershell
 # Depuis le dossier binance-bot-app
-scp -r deploy-hassio/* root@homeassistant.local:/addons/binance-bot-dashboard/
+scp -r hassio-addon/* root@homeassistant.local:/addons/binance-bot-dashboard/
 ```
 
 ### Étape 3 : Installer l'add-on dans Home Assistant
@@ -119,10 +122,13 @@ password: 'votre_mot_de_passe' # Optionnel - laissez vide pour désactiver
 
 ## Mise à jour de l'add-on
 
-1. Reconstruisez le package :
+1. Reconstruisez l'application :
 
    ```powershell
-   .\build-hassio.ps1
+   npm run build
+   Remove-Item -Recurse -Force hassio-addon\www
+   Copy-Item -Recurse dist\binance-bot-app\browser hassio-addon\www
+   Copy-Item src\assets\config.js hassio-addon\www\assets\config.js
    ```
 
 2. Recopiez les fichiers vers `/addons/binance-bot-dashboard/` (via Samba)
