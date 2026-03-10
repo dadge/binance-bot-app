@@ -259,6 +259,8 @@
                     [ngClass]="getProfitClass(calculateDailyPercent(botProfit.bot))"
                   >
                     {{ formatDailyPercent(botProfit.bot) }}
+                    <br />
+                    <small>{{ formatAPY(botProfit.bot) }}</small>
                   </td>
                   <td class="profit-cell" [ngClass]="getProfitClass(botProfit.gridProfitInEUR)">
                     {{ formatCurrency(botProfit.gridProfitInEUR, 'EUR') }}

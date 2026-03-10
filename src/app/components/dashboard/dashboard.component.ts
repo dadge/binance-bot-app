@@ -382,10 +382,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return Math.max(diffDays, 1); // Minimum 1 jour pour éviter division par 0
   }
 
-  // Calcule le % de grid profit moyen journalier
+  /**
+   * Calcule le rendement journalier moyen composé (en %) à partir du profit total et de la durée.
+   * @param bot - L'objet bot contenant les données de profit et de durée.
+   * @returns Rendement journalier moyen en pourcentage (ex: 0.12 pour 0.12%).
+   */
   calculateDailyPercent(bot: ParsedBot): number {
     const days = this.calculateDaysActive(bot);
-    return bot.gridProfitPercent / days;
+    const totalProfitPercent = bot.gridProfitPercent; // R = (F/P) - 1 (ex: 0.02 pour 2%)
+
+    // Formule des intérêts composés: r_jour = (1 + R)^(1/n) - 1
+    const dailyPercent = Math.pow(1 + totalProfitPercent, 1 / days) - 1;
+
+    // Conversion en pourcentage (ex: 0.0012 → 0.12%)
+    return dailyPercent * 100;
   }
 
   // Formate le % journalier pour l'affichage
@@ -393,6 +403,29 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const dailyPercent = this.calculateDailyPercent(bot);
     const prefix = dailyPercent >= 0 ? '+' : '';
     return `${prefix}${dailyPercent.toFixed(4)}%/j`;
+  }
+
+  /**
+   * Calcule l'APY (Annual Percentage Yield) à partir du profit total et de la durée.
+   * @param bot - L'objet bot contenant les données de profit (gridProfitPercent) et de durée.
+   * @returns APY en pourcentage (ex: 5.12 pour 5.12%).
+   */
+  calculateAPY(bot: ParsedBot): number {
+    const days = this.calculateDaysActive(bot);
+    if (days <= 0) return 0; // Évite les erreurs si le bot n'a pas encore démarré
+
+    const totalProfitPercent = bot.gridProfitPercent; // R = (F/P) - 1 (ex: 0.02 pour 2%)
+
+    // Formule APY: (1 + R)^(365/days) - 1
+    const apy = Math.pow(1 + totalProfitPercent, 365 / days) - 1;
+
+    return apy * 100; // Convertit en pourcentage (ex: 0.0512 → 5.12%)
+  }
+
+  formatAPY(bot: ParsedBot): string {
+    const apy = this.calculateAPY(bot) / 100;
+    const prefix = apy >= 0 ? '+' : '';
+    return `${prefix}${apy.toFixed(2)}%`;
   }
 
   // Méthode pour trier par colonne
