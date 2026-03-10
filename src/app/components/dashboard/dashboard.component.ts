@@ -402,7 +402,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   calculateAPR(bot: ParsedBot): number {
     const dailyPercent = this.calculateDailyPercent(bot);
     if (dailyPercent <= 0) return 0; // Évite les erreurs si le bot n'a pas encore démarré
-    return dailyPercent * 365; // Convertit en pourcentage (ex: 0.0512 → 5.12%)
+    return dailyPercent * 365 * 100; // Convertit en pourcentage (ex: 0.0512 → 5.12%)
   }
 
   formatAPR(bot: ParsedBot): string {
