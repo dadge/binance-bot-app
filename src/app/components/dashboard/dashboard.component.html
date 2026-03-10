@@ -260,7 +260,7 @@
                   >
                     {{ formatDailyPercent(botProfit.bot) }}
                     <br />
-                    <small>{{ formatAPY(botProfit.bot) }}</small>
+                    <small>{{ formatAPR(botProfit.bot) }}</small>
                   </td>
                   <td class="profit-cell" [ngClass]="getProfitClass(botProfit.gridProfitInEUR)">
                     {{ formatCurrency(botProfit.gridProfitInEUR, 'EUR') }}
