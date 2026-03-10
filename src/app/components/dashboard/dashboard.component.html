@@ -273,7 +273,9 @@
                     <br />
                     <small>{{ formatPercent(botProfit.bot.totalProfitPercent) }}</small>
                   </td>
-                  <td>{{ botProfit.bot.matchedTrades }}</td>
+                  <td>{{ botProfit.bot.matchedTrades }}
+                    <small>{{ (botProfit.bot.matchedTrades / calculateDaysActive(botProfit.bot)) | number:'1.1-2' + '/j' }}</small>
+                  </td>
                   <td>{{ formatDate(botProfit.bot.timeCreated) }}</td>
                 </tr>
               }

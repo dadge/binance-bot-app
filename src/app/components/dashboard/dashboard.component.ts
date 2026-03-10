@@ -408,7 +408,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   formatAPR(bot: ParsedBot): string {
     const apr = this.calculateAPR(bot) / 100;
     const prefix = apr >= 0 ? '+' : '';
-    return `${prefix}${apr.toFixed(2)}%`;
+    return `${prefix}${apr.toFixed(2)}%/an`;
   }
 
   // Méthode pour trier par colonne
