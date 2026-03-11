@@ -450,4 +450,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.configService.logout();
     this.router.navigate(['/login']);
   }
+
+  formatDailyMatchedTrades(bot: ParsedBot): string {
+    const days = this.calculateDaysActive(bot);
+    const dailyTrades = bot.matchedTrades / days;
+    const prefix = dailyTrades >= 0 ? '+' : '';
+    return `${prefix}${dailyTrades.toFixed(2)}/j`;
+  }
 }
