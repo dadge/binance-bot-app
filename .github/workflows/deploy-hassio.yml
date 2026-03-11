@@ -1,0 +1,79 @@
+name: Deploy to Hassio
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout binance-bot-app
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Angular app
+        run: npm run build
+
+      - name: Prepare hassio-addon/www
+        run: |
+          rm -rf hassio-addon/www
+          mkdir -p hassio-addon/www
+
+      - name: Copy build output to hassio-addon/www
+        run: cp -r dist/binance-bot-app/browser/. hassio-addon/www/
+
+      - name: Copy config.js to hassio-addon/www/assets
+        run: |
+          if [ -f src/assets/config.js ]; then
+            mkdir -p hassio-addon/www/assets
+            cp src/assets/config.js hassio-addon/www/assets/config.js
+          fi
+
+      - name: Copy backend files to hassio-addon/backend
+        run: |
+          if [ -d backend ]; then
+            mkdir -p hassio-addon/backend
+            cp backend/*.js backend/*.json hassio-addon/backend/ 2>/dev/null || true
+          fi
+
+      - name: Checkout target hassio repository
+        uses: actions/checkout@v4
+        with:
+          repository: dadge/hassio
+          token: ${{ secrets.DEPLOY_TOKEN }}
+          path: hassio-repo
+
+      - name: Sync hassio-addon to binance-bot-dashboard
+        # --delete ensures the target mirrors the source exactly, removing stale files
+        run: |
+          mkdir -p hassio-repo/binance-bot-dashboard
+          rsync -av --delete \
+            --exclude='.git' \
+            hassio-addon/ hassio-repo/binance-bot-dashboard/
+
+      - name: Commit and push to hassio repository
+        working-directory: hassio-repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add binance-bot-dashboard/
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update binance-bot-dashboard from binance-bot-app@${{ github.sha }}"
+            git push
+          fi
