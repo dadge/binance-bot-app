@@ -25,15 +25,15 @@ L'add-on se compose de :
 Sur votre PC Windows, ouvrez PowerShell et exécutez :
 
 ```powershell
-cd d:\dev\perso\binance-bot-app
+cd d:\dev\perso\binance-bot-app ;
 
 # Build Angular
-npm run build
+npm run build ;
 
 # Copier les fichiers compilés vers hassio-addon
-Remove-Item -Recurse -Force hassio-addon\www
-Copy-Item -Recurse dist\binance-bot-app\browser hassio-addon\www
-Copy-Item src\assets\config.js hassio-addon\www\assets\config.js
+Remove-Item -Recurse -Force hassio-addon\www ;
+Copy-Item -Recurse dist\binance-bot-app\browser hassio-addon\www ;
+Copy-Item src\assets\config.js hassio-addon\www\assets\config.js ;
 ```
 
 ### Étape 2 : Copier vers Home Assistant

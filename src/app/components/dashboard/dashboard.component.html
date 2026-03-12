@@ -268,7 +268,7 @@
                   <td class="profit-cell" [ngClass]="getProfitClass(botProfit.gridProfitInUSDC)">
                     {{ formatPrice(botProfit.gridProfitInUSDC) }} USDC
                   </td>
-                  <td [ngClass]="getProfitClass(botProfit.bot.totalProfit)">
+                  <td class="profit-cell" [ngClass]="getProfitClass(botProfit.bot.totalProfit)">
                     {{ formatPriceSmall(botProfit.bot.totalProfit) }} {{ botProfit.bot.quoteAsset }}
                     <br />
                     <small>{{ formatPercent(botProfit.bot.totalProfitPercent) }}</small>
